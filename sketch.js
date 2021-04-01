@@ -7,14 +7,16 @@ var engine, world;
 var box1, pig1,pig3;
 var backgroundImg,platform;
 var bird, slingshot;
-
-var gameState = "onSling";
-var bg = "sprites/bg1.png";
-
+var bg="sprites/bg.png";
 var score=0;
 
+var gameState = "onSling";
+
 function preload() {
-    getTime();
+    backgroundImg = loadImage("sprites/bg.png");
+
+    getBackgroundIMG();
+
 }
 
 function setup(){
@@ -49,9 +51,10 @@ function setup(){
 
 function draw(){
     if(backgroundImg)
-        background(backgroundImg);
     
- text("Score "+score,1100,50);
+    background(backgroundImg);
+
+    text("Score"+score,1150,20);
 
     Engine.update(engine);
     //strokeWeight(4);
@@ -79,36 +82,37 @@ function draw(){
 }
 
 function mouseDragged(){
-    Matter.Body.setPosition(bird.body, {x: mouseX , y: mouseY});
+    if (gameState!=="launched"){
+        Matter.Body.setPosition(bird.body, {x: mouseX , y: mouseY});
+    }
 }
-
 
 function mouseReleased(){
     slingshot.fly();
-    gameState ="launch";
-    
-}
-function keyPressed(){
-    if(keyCode===32)
-    bird.trajectory=[];
-    bird.come();
-    slingshot.attach(bird.body);
+    gameState = "launched";
 }
 
-async function getTime(){
+function keyPressed(){
+    if(keyCode === 32){
+       // slingshot.attach(bird.body);
+    }
+}
+
+async function getBackgroundIMG(){
+
     var response = await fetch("http://worldtimeapi.org/api/timezone/Asia/Kolkata");
-    var responseJSON = await response.json();
-console.log(responseJSON)
-    var datetime = responseJSON.datetime;
+    var responseType = await response.json();
+    var datetime = responseType.datetime;
     var hour = datetime.slice(11,13);
-    console.log(datetime);
-    console.log(hour);
-    if(hour>=06 && hour<=19){
-        bg = "sprites/bg1.png";
+    var minutes = datetime.slice(14,16)
+    console.log(minutes);
+
+    if(minutes>=07&&minutes<=08){
+    bg ="sprites/bg.png"; 
     }
     else{
-        bg = "sprites/bg2.jpg";
-    }
+    bg="sprites/bg2.jpg";
 
-    backgroundImg = loadImage(bg);
+    }
+    backgroundImg=loadImage(bg);
 }

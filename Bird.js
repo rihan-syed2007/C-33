@@ -6,9 +6,6 @@ class Bird extends BaseClass {
     this.trajectory =[];
   }
 
-  come(){
-    Matter.Body.setPosition(bird.body,{x:200,y:50});
-  }
   display() {
     //this.body.position.x = mouseX;
     //this.body.position.y = mouseY;
